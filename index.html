@@ -4,19 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Firebase Data</title>
-    
-
     <script type="module">
         import { firebaseService } from './fetchData.js';
         import { TableRenderer } from './renderTable.js';
 
         const tableRenderer = new TableRenderer('tableHeader', 'tableBody');
 
-        // Obtener y renderizar datos
         async function loadData() {
             const data = await firebaseService.fetchData('/lab-quimica-utpl/usuarios');
             if (data) {
                 tableRenderer.render(data);
+
+                const downloadButton = document.getElementById('downloadCsv');
+                downloadButton.addEventListener('click', () => {
+                    tableRenderer.generateCSV("ReporteLaboratorioQuimica_csv_" + new Date().toISOString().split('T')[0] + ".csv");
+                });
             } else {
                 console.error("No se encontraron datos para renderizar.");
             }
